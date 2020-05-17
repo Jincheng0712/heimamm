@@ -58,6 +58,10 @@
 <script>
 // 导入axios
 // import axios from 'axios'
+
+// 按需导入token.js里面的方法
+import {setToken, } from '@/utils/token';
+
 export default {
   name: "login",
   data() {
@@ -151,10 +155,11 @@ export default {
 
     // 登录
     loginClick() {
-      this.$refs.loginFormRef.validate(valid => {
+      this.$refs.loginFormRef.validate(async (valid) => {
         // 如果校验不通过,直接打断代码执行
         if (!valid) return;
         // 发请求登录
+        /**
         this.$axios.post("/login", this.loginFrom).then(res => {
           // console.log(res.data);
           if (res.data.code == 200) {
@@ -168,6 +173,25 @@ export default {
             this.codeURL = process.env.VUE_APP_BASEURL +"/captcha?type=login&sb="+Math.random();
           }
         });
+         */
+
+        // 把以上注释代码
+        const res = await this.$axios.post("/login", this.loginFrom);
+        if (res.data.code == 200) {
+          this.$message({
+            message: "登陆成功",
+            type: "success"
+          });
+          // 保存token
+          setToken(res.data.data.token);
+          // 跳转到后台页面
+          this.$router.push('/layout')
+        } else {
+          this.$message.error(res.data.message);
+          // 失败后刷新验证码
+          this.codeURL =
+            process.env.VUE_APP_BASEURL + "/captcha?type=login&sb=" + Math.random();
+        }
       });
     }
   }
