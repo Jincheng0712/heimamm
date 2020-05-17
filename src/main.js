@@ -4,18 +4,22 @@ import Vue from 'vue';
 // 导入根组件App.vue
 import App from './App.vue';
 
-// 导入axios
-// import axios from "axios";
+Vue.config.productionTip = false;
+
+// 也可以在这里导入全局样式或者在APP.vue中导入
+// 如果是导入less样式 需要安装less-loader来支持
+// 执行指令: npm i less less-loader -D  来安装
+// import './styles/base.less';
 
 // 导入router文件里index.js的路由router,注意这里不是导包
 import router from "./router/index";
 
-// 导入全局样式
-// 如果是导入less样式 需要安装less-loader来支持
-// 执行指令: npm i less less-loader -D  来安装
-import './styles/base.less';
+// 导入 element.js
+import './plugins/element.js'
 
-Vue.config.productionTip = false;
+// 导入 request.js (里面封装了axios)
+import '@/utils/request.js'
+
 
 // 一个项目会创建一个vue根实例
 new Vue({
