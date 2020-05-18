@@ -45,27 +45,34 @@
         </el-form-item>
         <!-- 注册按钮 -->
         <el-form-item>
-          <el-button style="width:100%" type="primary">注册</el-button>
+          <el-button @click="register" style="width:100%" type="primary">注册</el-button>
         </el-form-item>
       </el-form>
     </div>
     <div class="right">
       <img src="@/assets/login_bg.png" alt />
     </div>
+    <!-- 引用注册弹框子组件 -->
+    <register ref="registerRef"></register>
   </div>
 </template>
 
 <script>
-// 导入axios
-// import axios from 'axios'
+//导入register注册弹框子组件
+import register from "./register";
 
 // 按需导入token.js里面的方法
-import {setToken, } from '@/utils/token';
+import { setToken } from "@/utils/token";
 
 export default {
   name: "login",
+  // 注册子组件
+  components: {
+    register
+  },
   data() {
     return {
+      isShow: "",
       // 验证码请求地址
       codeURL: process.env.VUE_APP_BASEURL + "/captcha?type=login",
       loginFrom: {
@@ -155,7 +162,7 @@ export default {
 
     // 登录
     loginClick() {
-      this.$refs.loginFormRef.validate(async (valid) => {
+      this.$refs.loginFormRef.validate(async valid => {
         // 如果校验不通过,直接打断代码执行
         if (!valid) return;
         // 发请求登录
@@ -185,14 +192,20 @@ export default {
           // 保存token
           setToken(res.data.data.token);
           // 跳转到后台页面
-          this.$router.push('/layout')
+          this.$router.push("/layout");
         } else {
           this.$message.error(res.data.message);
           // 失败后刷新验证码
           this.codeURL =
-            process.env.VUE_APP_BASEURL + "/captcha?type=login&sb=" + Math.random();
+            process.env.VUE_APP_BASEURL +
+            "/captcha?type=login&sb=" +
+            Math.random();
         }
       });
+    },
+    // 注册 点击注册按钮弹出register页面
+    register() {
+      this.$refs.registerRef.dialogVisible = true;
     }
   }
 };
@@ -200,7 +213,9 @@ export default {
 
 <style lang="less">
 .login-container {
-  height: 100%;
+  // height: 100%;
+  height: 800px;
+
   display: flex;
   align-items: center;
   justify-content: space-around;
