@@ -213,8 +213,9 @@ export default {
 
 <style lang="less">
 .login-container {
-  // height: 100%;
-  height: 800px;
+  height: 100%;
+  // height: 800px;
+  padding: 120px 0;
 
   display: flex;
   align-items: center;

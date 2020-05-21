@@ -12,7 +12,6 @@ export default {
 </script>
 
 
-
 <style lang="less">
 // 导入全局样式
 @import url("./styles/base.less");

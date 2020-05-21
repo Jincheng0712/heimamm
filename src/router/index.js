@@ -1,3 +1,8 @@
+/**
+ * 路由配置js
+ */
+
+
 // 导入vue
 import Vue from 'vue';
 // 导入vue-router
@@ -7,14 +12,56 @@ import VueRouter from 'vue-router';
 import Login from '@/views/login'
 import Layout from '@/views/layout'
 
+import Chart from '@/views/layout/chart'
+import User from '@/views/layout/user'
+import Enterprise from '@/views/layout/enterprise'
+import Question from '@/views/layout/question'
+import Subject from '@/views/layout/subject'
+
+
+
 Vue.use(VueRouter);
+
+// 导入获取token方法
+import { getToken } from '@/utils/token'
 
 let router = new VueRouter({
     routes: [
-        { path: '*', component: Login },
+        { path: '/', component: Login },
         { path: '/login', component: Login },
-        { path: '/layout', component: Layout },
+
+        // 后台页路由配置
+        {
+            path: '/layout',
+            component: Layout,
+            // 嵌套路由
+            children: [
+                { path: 'chart', component: Chart, },
+                { path: 'user', component: User, },
+                { path: 'enterprise', component: Enterprise, },
+                { path: 'question', component: Question, },
+                { path: 'subject', component: Subject, },
+            ]
+        },
+
     ]
+})
+
+// 全局路径导航卫士 (请求拦截器)
+router.beforeEach((to, from, next) => {
+    // console.log('到哪里去', to);
+    // console.log('从哪里来', from);
+    if (to.fullPath == '/login') {
+        next();
+    } else {
+        const token = getToken();
+        if (token) {
+            next();
+        } else {
+            alert('请登录');
+            next('/login');
+        }
+    }
 })
 
 // 输出router
