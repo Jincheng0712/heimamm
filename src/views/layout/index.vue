@@ -15,24 +15,24 @@
     <el-container>
       <!--左边菜单  -->
       <el-aside width="auto">
-        <el-menu :router="true" :collapse="isCollapse" default-active="layout/enterprise">
-          <el-menu-item index="chart">
+        <el-menu :router="true" :collapse="isCollapse" :default-active="defaultActive">
+          <el-menu-item index="/layout/chart">
             <i class="el-icon-pie-chart"></i>
             <span slot="title">数据预览</span>
           </el-menu-item>
-          <el-menu-item index="user">
+          <el-menu-item index="/layout/user">
             <i class="el-icon-user"></i>
             <span slot="title">用户列表</span>
           </el-menu-item>
-          <el-menu-item index="enterprise">
+          <el-menu-item index="/layout/enterprise">
             <i class="el-icon-office-building"></i>
             <span slot="title">企业列表</span>
           </el-menu-item>
-          <el-menu-item index="question">
+          <el-menu-item index="/layout/question">
             <i class="el-icon-edit-outline"></i>
             <span slot="title">题库列表</span>
           </el-menu-item>
-          <el-menu-item index="subject">
+          <el-menu-item index="/layout/subject">
             <i class="el-icon-notebook-2"></i>
             <span slot="title">学科列表</span>
           </el-menu-item>
@@ -52,12 +52,15 @@ import { removeToken } from "@/utils/token";
 export default {
   data() {
     return {
+      // 默认选中的菜单项
+      defaultActive: "/layout/chart",
       isCollapse: false, // 是否展开左菜单栏
       avatar: "", // 用户的头像
       username: "" // 昵称
     };
   },
   created() {
+    this.defaultActive = this.$route.fullPath;
     this.getUserInfoData();
   },
   methods: {
@@ -100,7 +103,7 @@ export default {
 
     // 退出
     logout() {
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+      this.$confirm("确定退出吗?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"

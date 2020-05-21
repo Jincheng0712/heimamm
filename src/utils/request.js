@@ -18,11 +18,13 @@ axios.defaults.withCredentials = true;
 // 拦截器: 作用与请求发送之前
 // 因此用来全局配置请求头,带上token
 axios.interceptors.request.use(function (config) {
-    // Do something before request is sent
+
+    // 统一设置请求头-----------------
     const token = getToken();
     if (token) {
         config.headers.token = token;
-    }
+    };
+    // 统一设置请求头-----------------
 
     return config;
 }, function (error) {
