@@ -43,7 +43,7 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="primary">编辑</el-button>
+            <el-button @click="editEnterprise(scope.row)" type="primary">编辑</el-button>
 
             <el-button
               @click="changeStatus(scope.row.id)"
@@ -136,6 +136,18 @@ export default {
       this.page = val;
       this.getEnterpriseListData();
     },
+    // 更改用户状态
+    async changeStatus(id) {
+      const res = await this.$axios.post("/enterprise/status", { id });
+      if (res.data.code === 200) {
+        this.$message({
+          type: "success",
+          message: "更改成功~"
+        });
+        // 刷新
+        this.search();
+      }
+    },
     // 删除企业用户
     del(id) {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
@@ -161,17 +173,20 @@ export default {
       this.$refs.enterpriseEditRef.dialogVisible = true;
       this.$refs.enterpriseEditRef.mode = "add";
     },
-    // 更改用户状态
-    async changeStatus(id) {
-      const res = await this.$axios.post("/enterprise/status", { id });
-      if (res.data.code === 200) {
-        this.$message({
-          type: "success",
-          message: "更改成功~"
-        });
-        // 刷新
-        this.search();
-      }
+    // 修改企业用户
+    editEnterprise(row) {
+      // console.log("-----------");
+      const { id, eid, name, short_name, intro, remark } = row;
+      this.$refs.enterpriseEditRef.enterpriseForm = {
+        id,
+        eid,
+        name,
+        short_name,
+        intro,
+        remark
+      };
+      this.$refs.enterpriseEditRef.mode = "edit";
+      this.$refs.enterpriseEditRef.dialogVisible = true;
     }
   }
 };
