@@ -68,6 +68,7 @@
   </div>
 </template>
 <script>
+// 完成了第六天的功能
 export default {
   name: "EnterPrise",
   data() {
