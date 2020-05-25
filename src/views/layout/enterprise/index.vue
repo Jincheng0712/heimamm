@@ -44,10 +44,13 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="primary">编辑</el-button>
+
             <el-button
+              @click="changeStatus(scope.row.id)"
               :type="scope.row.status===0?'success':'info'"
             >{{scope.row.status===0?"启用":"禁用"}}</el-button>
-            <el-button type="primary">删除</el-button>
+
+            <el-button @click="del(scope.row.id)" type="primary">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -65,11 +68,19 @@
         ></el-pagination>
       </div>
     </el-card>
+    <!-- 使用新增或编辑子组件 -->
+    <EnterpriseEdit ref="enterpriseEditRef"></EnterpriseEdit>
   </div>
 </template>
 <script>
+// 导入子组件
+import EnterpriseEdit from "./enterprise-add-or-update";
 // 完成了第六天的功能
 export default {
+  // 注册
+  components: {
+    EnterpriseEdit
+  },
   name: "EnterPrise",
   data() {
     return {
@@ -125,8 +136,43 @@ export default {
       this.page = val;
       this.getEnterpriseListData();
     },
+    // 删除企业用户
+    del(id) {
+      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          const res = await this.$axios.post("/enterprise/remove", { id });
+          if (res.data.code === 200) {
+            this.$message({
+              type: "success",
+              message: "更改成功~"
+            });
+            // 刷新页面
+            this.search();
+          }
+        })
+        .catch(() => {});
+    },
     // 新增企业用户
-    add() {}
+    add() {
+      this.$refs.enterpriseEditRef.dialogVisible = true;
+      this.$refs.enterpriseEditRef.mode = "add";
+    },
+    // 更改用户状态
+    async changeStatus(id) {
+      const res = await this.$axios.post("/enterprise/status", { id });
+      if (res.data.code === 200) {
+        this.$message({
+          type: "success",
+          message: "更改成功~"
+        });
+        // 刷新
+        this.search();
+      }
+    }
   }
 };
 </script>
