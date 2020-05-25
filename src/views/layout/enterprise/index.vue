@@ -170,8 +170,30 @@ export default {
     },
     // 新增企业用户
     add() {
-      this.$refs.enterpriseEditRef.dialogVisible = true;
       this.$refs.enterpriseEditRef.mode = "add";
+      this.$refs.enterpriseEditRef.dialogVisible = true;
+      /*
+      // 方法一
+      // 1.1 resetFields方法同时清空校验和数据
+      this.$nextTick(() => {
+        this.$refs.enterpriseEditRef.$refs.enterpriseFormRef.resetFields();
+      });
+      */
+
+      // 方法二
+      // 2.1 清空数据模型
+      this.$refs.enterpriseEditRef.enterpriseForm = {
+        eid: "", // 企业编号
+        name: "", // 企业名称
+        short_name: "", // 简称
+        intro: "", // 企业简介
+        remark: "" // 备注
+      };
+      // // 2.2 清空校验规则
+      // this.$nextTick(() => {
+      //   this.$refs.enterpriseEditRef.$refs.enterpriseFormRef.clearValidate();
+      // });
+      // ...以上代码冗余,改为在子组件监听dialogVisible值变化来清空校验
     },
     // 修改企业用户
     editEnterprise(row) {
@@ -187,6 +209,12 @@ export default {
       };
       this.$refs.enterpriseEditRef.mode = "edit";
       this.$refs.enterpriseEditRef.dialogVisible = true;
+
+      // // 清空校验规则
+      // this.$nextTick(() => {
+      //   this.$refs.enterpriseEditRef.$refs.enterpriseFormRef.clearValidate();
+      // });
+      // ...以上代码冗余,改为在子组件监听dialogVisible值变化来清空校验
     }
   }
 };

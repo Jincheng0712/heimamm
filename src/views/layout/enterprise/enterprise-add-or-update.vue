@@ -69,6 +69,20 @@ export default {
       }
     };
   },
+  watch: {
+    // 监听dialogVisible值变化来清空校验规则
+    // 关闭时候清空 也就是newValue为false的时候
+    dialogVisible(newValue) {
+      //   if (newValue) {
+      //     this.$nextTick(() => {
+      //       this.$refs.enterpriseFormRef.clearValidate();
+      //     });
+      //   }
+      if (!newValue) {
+        this.$refs.enterpriseFormRef.clearValidate();
+      }
+    }
+  },
   methods: {
     // 新增或修改点击确认按钮提交的方法
     submit() {
