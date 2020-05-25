@@ -2,7 +2,7 @@
   <div class="userEdit">
     <el-dialog center :visible.sync="dialogVisible" width="600px">
       <!-- 使用插槽替换title  -->
-      <div slot="title" class="title">{{mode=='add'?'新增用户':'修改用户'}}</div>
+      <div slot="title" class="title">{{mode==='add'?'新增用户':'修改用户'}}</div>
       <!-- 中间表单部分 -->
       <el-form :model="userForm" :rules="rules" ref="userEditFormRef" label-width="80px">
         <el-form-item label="用户名" prop="username">
@@ -16,16 +16,16 @@
         </el-form-item>
         <el-form-item label="角色" prop="role_id">
           <el-select v-model="userForm.role_id" placeholder="请选择">
-            <el-option label="超级管理员" value="1"></el-option>
-            <el-option label="管理员" value="2"></el-option>
-            <el-option label="老师" value="3"></el-option>
-            <el-option label="学生" value="4"></el-option>
+            <el-option label="超级管理员" :value="1"></el-option>
+            <el-option label="管理员" :value="2"></el-option>
+            <el-option label="老师" :value="3"></el-option>
+            <el-option label="学生" :value="4"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="userForm.status" placeholder="请选择状态">
-            <el-option label="启用" value="1"></el-option>
-            <el-option label="禁用" value="0"></el-option>
+            <el-option label="启用" :value="1"></el-option>
+            <el-option label="禁用" :value="0"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="用户备注" prop="remark">
@@ -43,10 +43,18 @@
 
 <script>
 export default {
+  name: "UserEdit",
+  // 接收mode值
+  props: {
+    mode: {
+      type: String,
+      default: "add"
+    }
+  },
   data() {
     return {
       dialogVisible: false, //是否显示弹窗
-      mode: "", // 模式:add或者edit
+      // mode: "", // 模式:add或者edit
       userForm: {
         username: "", //用户名
         email: "", // 邮箱
@@ -117,6 +125,8 @@ export default {
         if (this.mode == "add") {
           res = await this.$axios.post("/user/add", this.userForm);
         } else {
+          // 修改
+          res = await this.$axios.post("/user/edit", this.userForm);
         }
         if (res.data.code == 200) {
           // 提示成功
@@ -126,8 +136,12 @@ export default {
           });
           // 关闭当前对话框
           this.dialogVisible = false;
-          // 调用父组件中seach方法
-          this.$parent.search();
+          // 调用父组件中seach方法,刷新父组件数据
+          // 方法一:
+          // this.$parent.search();
+
+          // 方法二:
+          this.$emit("editok");
         } else {
           this.$message.error(res.data.message);
         }

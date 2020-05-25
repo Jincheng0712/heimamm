@@ -16,6 +16,10 @@
       <!--左边菜单  -->
       <el-aside width="auto">
         <el-menu :router="true" :collapse="isCollapse" :default-active="defaultActive">
+          <el-menu-item index="/layout/welcome">
+            <i class="el-icon-date"></i>
+            <span slot="title">个人信息</span>
+          </el-menu-item>
           <el-menu-item index="/layout/chart">
             <i class="el-icon-pie-chart"></i>
             <span slot="title">数据预览</span>
@@ -53,7 +57,7 @@ export default {
   data() {
     return {
       // 默认选中的菜单项
-      defaultActive: "/layout/chart",
+      defaultActive: "/layout/welcome",
       isCollapse: false, // 是否展开左菜单栏
       avatar: "", // 用户的头像
       username: "" // 昵称
@@ -168,6 +172,9 @@ export default {
 // }
 </style>
 <style lang="less">
+element.style {
+  height: 100%;
+}
 .layout {
   height: 100%;
   .header {

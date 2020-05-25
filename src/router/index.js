@@ -17,6 +17,12 @@ import User from '@/views/layout/user'
 import Enterprise from '@/views/layout/enterprise'
 import Question from '@/views/layout/question'
 import Subject from '@/views/layout/subject'
+import Welcome from "@/views/layout/welcome"
+
+
+// 以下是测试路由
+import Parent from '../test/parent.vue' //导入父组件
+
 
 
 
@@ -36,6 +42,7 @@ let router = new VueRouter({
             component: Layout,
             // 嵌套路由
             children: [
+                { path: 'welcome', component: Welcome },
                 { path: 'chart', component: Chart, },
                 { path: 'user', component: User, },
                 { path: 'enterprise', component: Enterprise, },
@@ -43,6 +50,10 @@ let router = new VueRouter({
                 { path: 'subject', component: Subject, },
             ]
         },
+
+        // 以下是测试路由
+        { path: '/parent', component: Parent },
+
 
     ]
 })
