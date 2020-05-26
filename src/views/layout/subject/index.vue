@@ -21,7 +21,7 @@
         <el-form-item>
           <el-button @click="search" type="primary">搜索</el-button>
           <el-button @click="clear">清除</el-button>
-          <el-button type="primary">+新增学科</el-button>
+          <el-button @click="add" type="primary">+新增学科</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -44,7 +44,7 @@
         </el-table-column>
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
-            <el-button type="primary">编辑</el-button>
+            <el-button @click="editSubject" type="primary">编辑</el-button>
 
             <el-button
               @click="changeStatus(scope.row.id)"
@@ -68,11 +68,18 @@
         ></el-pagination>
       </div>
     </el-card>
+    <!-- 使用 新增/编辑 子组件 -->
+    <SubjectEdit ref="SubjectEditRef"></SubjectEdit>
   </div>
 </template>
 
 <script>
+// 导入 新增/编辑 子组件
+import SubjectEdit from "./subject-add-or-update";
 export default {
+  components: {
+    SubjectEdit
+  },
   name: "Subject",
   data() {
     return {
@@ -161,6 +168,16 @@ export default {
           }
         })
         .catch(() => {});
+    },
+    // 新增学科
+    add() {
+      this.$refs.SubjectEditRef.dialogVisible = true;
+      this.$refs.SubjectEditRef.mode = "add";
+    },
+    // 编辑学科
+    editSubject() {
+      this.$refs.SubjectEditRef.dialogVisible = true;
+      this.$refs.SubjectEditRef.mode = "edit";
     }
   }
 };
