@@ -27,6 +27,7 @@
     </el-card>
     <!-- 列表、分页部分 -->
     <el-card style="margin-top:15px;">
+      <!-- 列表部分 -->
       <el-table align="center" :data="subjectList" border stripe>
         <el-table-column align="center" type="index" width="50"></el-table-column>
         <el-table-column align="center" label="学科编号" prop="rid" width="200px"></el-table-column>
@@ -53,6 +54,18 @@
           </template>
         </el-table-column>
       </el-table>
+      <!-- 分页部分 -->
+      <div style="margin-top:15px;text-align:center;">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="page"
+          :page-sizes="[2, 5, 10, 20]"
+          :page-size="limit"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+        ></el-pagination>
+      </div>
     </el-card>
   </div>
 </template>
@@ -93,13 +106,25 @@ export default {
         this.total = res.data.data.pagination.total;
       }
     },
+    // 搜索
     search() {
       this.page = 1;
       this.getSubjectListData();
     },
+    // 清除
     clear() {
       this.$refs.searchFormRef.resetFields();
       this.search();
+    },
+    // 页容量发生改变回调函数
+    handleSizeChange(val) {
+      this.limit = val;
+      this.search();
+    },
+    // 页码发生改变回调函数
+    handleCurrentChange(val) {
+      this.page = val;
+      this.getSubjectListData();
     }
   }
 };
