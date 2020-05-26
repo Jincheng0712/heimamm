@@ -47,10 +47,11 @@
             <el-button type="primary">编辑</el-button>
 
             <el-button
+              @click="changeStatus(scope.row.id)"
               :type="scope.row.status===1?'info':'success'"
             >{{scope.row.status===1?"禁用":"启用"}}</el-button>
 
-            <el-button type="danger">删除</el-button>
+            <el-button @click="del(scope.row.id)" type="danger">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -121,10 +122,45 @@ export default {
       this.limit = val;
       this.search();
     },
-    // 页码发生改变回调函数
+    // 当前页码发生改变回调函数
     handleCurrentChange(val) {
       this.page = val;
       this.getSubjectListData();
+    },
+    // 更改状态
+    async changeStatus(id) {
+      // console.log("132", id);
+      const res = await this.$axios.post("/subject/status", { id });
+      if (res.data.code == 200) {
+        // 提示
+        this.$message({
+          type: "success",
+          message: "更新状态成功~"
+        });
+        // 刷新
+        this.getSubjectListData();
+      }
+    },
+    // 删除操作
+    del(id) {
+      this.$confirm("确认要删除?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          const res = await this.$axios.post("/subject/remove", { id });
+          if (res.data.code == 200) {
+            // 提示
+            this.$message({
+              type: "success",
+              message: "删除成功~"
+            });
+            // 刷新
+            this.getSubjectListData();
+          }
+        })
+        .catch(() => {});
     }
   }
 };
