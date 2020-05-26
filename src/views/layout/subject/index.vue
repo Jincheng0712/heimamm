@@ -44,7 +44,7 @@
         </el-table-column>
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
-            <el-button @click="editSubject" type="primary">编辑</el-button>
+            <el-button @click="editSubject(scope.row)" type="primary">编辑</el-button>
 
             <el-button
               @click="changeStatus(scope.row.id)"
@@ -175,9 +175,20 @@ export default {
       this.$refs.SubjectEditRef.mode = "add";
     },
     // 编辑学科
-    editSubject() {
-      this.$refs.SubjectEditRef.dialogVisible = true;
+    editSubject(row) {
       this.$refs.SubjectEditRef.mode = "edit";
+      // 解构赋值
+      const { id, rid, name, short_name, intro, remark } = row;
+      this.$refs.SubjectEditRef.subjectForm = {
+        id, // 学科id
+        rid, // 学科编号
+        name, // 学科名称
+        short_name, // 学科简称
+        intro, // 学科简介
+        remark // 备注
+      };
+
+      this.$refs.SubjectEditRef.dialogVisible = true;
     }
   }
 };

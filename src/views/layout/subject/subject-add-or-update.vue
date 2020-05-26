@@ -68,7 +68,33 @@ export default {
   },
   methods: {
     // 点击确定按钮事件
-    submit() {}
+    submit() {
+      // 提交前的验证
+      this.$refs.subjectFormRef.validate(async valid => {
+        if (!valid) return;
+        let res = null;
+
+        if (this.mode === "add") {
+          // 新增
+          res = await this.$axios.post("/subject/add", this.subjectForm);
+        } else {
+          // 编辑
+          res = await this.$axios.post("/subject/edit", this.subjectForm);
+        }
+        if (res.data.code == 200) {
+          // 提示
+          this.$message({
+            type: "success",
+            message: this.mode === "add" ? "新增成功~" : "编辑成功~"
+          });
+          // 关闭当前会话框
+          this.dialogVisible = false;
+
+          // 调用父组件的search方法
+          this.$parent.search();
+        }
+      });
+    }
   }
 };
 </script>
