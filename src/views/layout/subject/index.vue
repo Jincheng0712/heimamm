@@ -26,7 +26,34 @@
       </el-form>
     </el-card>
     <!-- 列表、分页部分 -->
-    <el-card style="margin-top:15px;"></el-card>
+    <el-card style="margin-top:15px;">
+      <el-table align="center" :data="subjectList" border stripe>
+        <el-table-column align="center" type="index" width="50"></el-table-column>
+        <el-table-column align="center" label="学科编号" prop="rid" width="200px"></el-table-column>
+        <el-table-column align="center" label="学科名称" prop="name" width="200px"></el-table-column>
+        <el-table-column align="center" label="简称" prop="short_name" width="200px"></el-table-column>
+        <el-table-column align="center" label="创建者" prop="username" width="200px"></el-table-column>
+        <el-table-column align="center" label="创建日期" prop="create_time" width="200px"></el-table-column>
+        <el-table-column align="center" label="状态" width="200px">
+          <template slot-scope="scope">
+            <span
+              :style="{color:scope.row.status===1?'#6ac144':'red'}"
+            >{{scope.row.status===1?"启用":"禁用"}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="操作">
+          <template slot-scope="scope">
+            <el-button type="primary">编辑</el-button>
+
+            <el-button
+              :type="scope.row.status===1?'info':'success'"
+            >{{scope.row.status===1?"禁用":"启用"}}</el-button>
+
+            <el-button type="danger">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
   </div>
 </template>
 
