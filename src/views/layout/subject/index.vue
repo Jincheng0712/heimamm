@@ -173,6 +173,13 @@ export default {
     add() {
       this.$refs.SubjectEditRef.dialogVisible = true;
       this.$refs.SubjectEditRef.mode = "add";
+      this.$refs.SubjectEditRef.subjectForm = {
+        rid: "", // 学科编号
+        name: "", // 学科名称
+        short_name: "", // 学科简称
+        intro: "", // 学科简介
+        remark: "" // 备注
+      };
     },
     // 编辑学科
     editSubject(row) {

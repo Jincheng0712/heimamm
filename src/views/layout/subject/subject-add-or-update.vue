@@ -66,6 +66,15 @@ export default {
       }
     };
   },
+  // 监听
+  watch: {
+    // 监听dialogVisible值变化,来清空再次打开后的校验规则
+    dialogVisible(newValue) {
+      if (!newValue) {
+        this.$refs.subjectFormRef.clearValidate();
+      }
+    }
+  },
   methods: {
     // 点击确定按钮事件
     submit() {
