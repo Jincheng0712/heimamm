@@ -2,7 +2,7 @@
   <div>
     <!-- 搜索区域 -->
     <el-card>
-      <el-form inline :model="searchForm" ref="form" label-width="80px">
+      <el-form inline :model="searchForm" ref="searchFormRef" label-width="80px">
         <el-row>
           <el-col :span="6">
             <el-form-item label="学科" prop="subject">
@@ -81,14 +81,14 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="标题" prop="title">
-              <el-input style="width:400px" v-model="searchForm.title"></el-input>
+              <el-input style="width:300px" v-model="searchForm.title"></el-input>
             </el-form-item>
           </el-col>
 
           <el-col :span="12">
             <el-form-item>
-              <el-button type="primary">搜索</el-button>
-              <el-button>清除</el-button>
+              <el-button @click="search" type="primary">搜索</el-button>
+              <el-button @click="clear">清除</el-button>
               <el-button type="primary">+新增试题</el-button>
             </el-form-item>
           </el-col>
@@ -96,7 +96,54 @@
       </el-form>
     </el-card>
     <!-- 列表区域 -->
-    <el-card style="margin-top:15px;"></el-card>
+    <el-card style="margin-top:15px;">
+      <el-table :data="questionList" border stripe>
+        <el-table-column label="序号" type="index"></el-table-column>
+
+        <el-table-column label="题目">
+          <template slot-scope="scope">
+            <div v-html="scope.row.title"></div>
+          </template>
+        </el-table-column>
+
+        <!-- 学科与阶段 -->
+        <el-table-column label="学科.阶段" :formatter="formatterSubject"></el-table-column>
+
+        <el-table-column label="题型" :formatter="formatterType">
+          <!-- <template slot-scope="scope"> -->
+          <!-- <span> -->
+          <!-- 方法一:直接写简单高效 -->
+          <!-- {{typeObj[scope.row.type]}} -->
+          <!-- 方法二:自定义方法返回 -->
+          <!-- {{formatType(scope.row.type)}} -->
+          <!-- </span> -->
+          <!-- </template> -->
+        </el-table-column>
+
+        <el-table-column label="企业" prop="enterprise_name"></el-table-column>
+
+        <el-table-column label="创建者" prop="username"></el-table-column>
+
+        <el-table-column label="状态" prop="status">
+          <template slot-scope="scope">
+            <div
+              :style="{color:scope.row.status==1?'#6ac144':'red'}"
+            >{{scope.row.status=="1"?"启用":"禁用"}}</div>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="操作" width="280">
+          <template slot-scope="scope">
+            <el-button type="primary" @click="editSubject(scope.row)">编辑</el-button>
+            <el-button
+              :type="scope.row.status==1?'info':'success'"
+              @click="changeStatus(scope.row.id)"
+            >{{scope.row.status=="1"?"禁用":"启用"}}</el-button>
+            <el-button type="danger" @click="del(scope.row.id)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
   </div>
 </template>
 
@@ -122,28 +169,80 @@ export default {
         status: "", // 状态 0 禁用 1 启用
         create_date: "", // 创建日期
         title: "" // 标题
-      }
+      },
+      page: 1, //页码
+      limit: 2, //页容量
+      questionList: [], // 题库列表
+      total: 0 // 总条数
     };
   },
   created() {
     this.getSubjectListData();
     this.getEnterpriseListData();
+    this.getQuestionListData();
   },
 
   methods: {
-    // 获取学科列表
+    // 获取 学科列表
     async getSubjectListData() {
       const res = await this.$axios.get("/subject/list");
       if (res.data.code === 200) {
         this.subjectList = res.data.data.items;
       }
     },
-    // 获取企业列表
+    // 获取 企业列表
     async getEnterpriseListData() {
       const res = await this.$axios.get("/enterprise/list");
       if (res.data.code === 200) {
         this.enterpriseList = res.data.data.items;
       }
+    },
+
+    // 分页获取 题库列表 数据
+    async getQuestionListData() {
+      const res = await this.$axios.get("/question/list", {
+        params: {
+          page: this.page,
+          limit: this.limit,
+          ...this.searchForm
+        }
+      });
+      if (res.data.code === 200) {
+        this.questionList = res.data.data.items;
+        this.total = res.data.data.pagination.total;
+      }
+    },
+    // 搜索
+    search() {
+      this.page = 1;
+      this.getQuestionListData();
+    },
+    // 清除
+    clear() {
+      this.$refs.searchFormRef.resetFields();
+      this.search();
+    },
+
+    // 编辑
+    editSubject() {},
+    // 更改状态
+    changeStatus() {},
+    //删除
+    del() {},
+
+    // // 自定义方法
+    // formatType(val) {
+    //   return this.typeObj[val];
+    // }
+
+    //  饿了么UI的formatter方法格式化题型
+    formatterType(row) {
+      return this.typeObj[row.type];
+    },
+
+    //  饿了么UI的formatter方法格式化学科与阶段
+    formatterSubject(row) {
+      return `${row.subject_name}-${this.typeObj[row.step]}`;
     }
   }
 };
