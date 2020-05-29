@@ -89,7 +89,7 @@
             <el-form-item>
               <el-button @click="search" type="primary">搜索</el-button>
               <el-button @click="clear">清除</el-button>
-              <el-button type="primary">+新增试题</el-button>
+              <el-button @click="add" type="primary">+新增试题</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -157,12 +157,27 @@
         ></el-pagination>
       </div>
     </el-card>
+    <!-- 使用子组件 -->
+    <!-- 父组件传值 -->
+    <question-edit
+      ref="questionEditRef"
+      :subjectList="subjectList"
+      :enterpriseList="enterpriseList"
+      :stepObj="stepObj"
+      :typeObj="typeObj"
+      :difficultyObj="difficultyObj"
+    ></question-edit>
   </div>
 </template>
 
 <script>
+// 导入子组件
+import QuestionEdit from "./question-add-or-update";
 export default {
   name: "Question",
+  components: {
+    QuestionEdit
+  },
   data() {
     return {
       subjectList: [], //学科列表
@@ -234,6 +249,11 @@ export default {
     clear() {
       this.$refs.searchFormRef.resetFields();
       this.search();
+    },
+
+    add() {
+      this.$refs.questionEditRef.mode = "add";
+      this.$refs.questionEditRef.dialogVisible = true;
     },
 
     // 编辑
