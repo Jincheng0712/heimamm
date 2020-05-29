@@ -143,6 +143,19 @@
           </template>
         </el-table-column>
       </el-table>
+      <!-- 分页功能 -->
+      <div style="margin-top:15px;text-align:center;">
+        <el-pagination
+          @size-change="sizeChange"
+          @current-change="currentChange"
+          :current-page="page"
+          :page-sizes="[2, 5, 10, 20]"
+          :page-size="limit"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+          background
+        ></el-pagination>
+      </div>
     </el-card>
   </div>
 </template>
@@ -225,10 +238,42 @@ export default {
 
     // 编辑
     editSubject() {},
+
     // 更改状态
-    changeStatus() {},
+    async changeStatus(id) {
+      const res = await this.$axios.post("/question/status", { id });
+      if (res.data.code === 200) {
+        // 提示
+        this.$message({
+          type: "success",
+          message: "更改状态成功~"
+        });
+        // 刷新当前页面
+        this.getQuestionListData();
+      }
+    },
     //删除
-    del() {},
+    del(id) {
+      // 弹窗确认
+      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          const res = await this.$axios.post("/question/remove", { id });
+          if (res.data.code === 200) {
+            // 提示
+            this.$message({
+              type: "success",
+              message: "删除成功~"
+            });
+            // 刷新当前页面
+            this.search();
+          }
+        })
+        .catch(() => {});
+    },
 
     // // 自定义方法
     // formatType(val) {
@@ -243,6 +288,17 @@ export default {
     //  饿了么UI的formatter方法格式化学科与阶段
     formatterSubject(row) {
       return `${row.subject_name}-${this.typeObj[row.step]}`;
+    },
+
+    //页容量发生改变
+    sizeChange(val) {
+      this.limit = val;
+      this.search();
+    },
+    //当前页发生改变
+    currentChange(val) {
+      this.page = val;
+      this.getQuestionListData();
     }
   }
 };
