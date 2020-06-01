@@ -42,11 +42,21 @@
         <el-table-column label="操作" width="280">
           <template slot-scope="scope">
             <el-button type="primary" @click="editUser(scope.row)">编辑</el-button>
-            <el-button
+
+            <!-- <el-button
               @click="changeStatus(scope.row.id)"
               :type="scope.row.status === 0 ? 'success' : 'info'"
+            >{{scope.row.status === 0 ? "启用" : "禁用"}}</el-button>-->
+
+            <!-- 注释的以上代码,改为吊用混入 -->
+            <el-button
+              @click="changeStatus('/user/status',scope.row.id)"
+              :type="scope.row.status === 0 ? 'success' : 'info'"
             >{{scope.row.status === 0 ? "启用" : "禁用"}}</el-button>
-            <el-button @click="deletUser(scope.row.id,scope.row.id)" type="default">删除</el-button>
+
+            <!-- <el-button @click="deletUser(scope.row.id,scope.row.username)" type="default">删除</el-button> -->
+            <!-- 注释以上代码,调用混入的方法来更改状态 -->
+            <el-button @click="del('/user/remove',scope.row.id)" type="default">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -72,8 +82,15 @@
 // 导入新增/修改弹窗子组件
 import userEdit from "./addOrUpdata";
 
+// 导入写有混入对象的组件
+import common from "@/mixins/common";
+
 export default {
   name: "userlist",
+
+  // 进入混入
+  mixins: [common],
+
   // 注册子组件
   components: {
     userEdit
@@ -132,39 +149,43 @@ export default {
       this.page = value;
       this.getuserList();
     },
+
     //更改用户状态方法
-    async changeStatus(id) {
-      const res = await this.$axios.post("/user/status", { id });
-      if (res.data.code === 200) {
-        this.$message({
-          message: "用户状态修改成功",
-          type: "success"
-        });
-        // 重新请求数据渲染
-        this.search();
-      }
-    },
+    // async changeStatus(id) {
+    //   const res = await this.$axios.post("/user/status", { id });
+    //   if (res.data.code === 200) {
+    //     this.$message({
+    //       message: "用户状态修改成功",
+    //       type: "success"
+    //     });
+    //     // 重新请求数据渲染
+    //     this.search();
+    //   }
+    // },
+    // 注释以上代码,调用混入的方法来更改状态
+
     //删除用户方法
-    deletUser(id, username) {
-      // 确认框部分
-      this.$confirm(`确认删除${username}用户吗?`, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(async () => {
-          const res = await this.$axios.post("/user/remove", { id });
-          if (res.data.code === 200) {
-            this.$message({
-              message: "用户删除成功",
-              type: "success"
-            });
-            // 重新请求数据渲染
-            this.search();
-          }
-        })
-        .catch(() => {});
-    },
+    // deletUser(id, username) {
+    //   // 确认框部分
+    //   this.$confirm(`确认删除${username}用户吗?`, "提示", {
+    //     confirmButtonText: "确定",
+    //     cancelButtonText: "取消",
+    //     type: "warning"
+    //   })
+    //     .then(async () => {
+    //       const res = await this.$axios.post("/user/remove", { id });
+    //       if (res.data.code === 200) {
+    //         this.$message({
+    //           message: "用户删除成功",
+    //           type: "success"
+    //         });
+    //         // 重新请求数据渲染
+    //         this.search();
+    //       }
+    //     })
+    //     .catch(() => {});
+    // },
+    // 注释以上代码,调用混入的方法来更改状态
 
     // 点击弹出新增用户
     add() {

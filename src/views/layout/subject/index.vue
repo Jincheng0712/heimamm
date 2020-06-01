@@ -46,12 +46,19 @@
           <template slot-scope="scope">
             <el-button @click="editSubject(scope.row)" type="primary">编辑</el-button>
 
-            <el-button
+            <!-- <el-button
               @click="changeStatus(scope.row.id)"
+              :type="scope.row.status===1?'info':'success'"
+            >{{scope.row.status===1?"禁用":"启用"}}</el-button>-->
+            <!-- 以上代码注释,改为调用混入中的方法 -->
+            <el-button
+              @click="changeStatus('/subject/status',scope.row.id)"
               :type="scope.row.status===1?'info':'success'"
             >{{scope.row.status===1?"禁用":"启用"}}</el-button>
 
-            <el-button @click="del(scope.row.id)" type="danger">删除</el-button>
+            <!-- <el-button @click="del(scope.row.id)" type="danger">删除</el-button> -->
+            <!-- 以上代码注释,改为调用混入中的方法 -->
+            <el-button @click="del('/subject/remove',scope.row.id)" type="danger">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -76,7 +83,12 @@
 <script>
 // 导入 新增/编辑 子组件
 import SubjectEdit from "./subject-add-or-update";
+
+// 导入写有混入对象的组件
+import common from "@/mixins/common";
 export default {
+  // 进入混入
+  mixins: [common],
   components: {
     SubjectEdit
   },
@@ -134,41 +146,46 @@ export default {
       this.page = val;
       this.getSubjectListData();
     },
+
     // 更改状态
-    async changeStatus(id) {
-      // console.log("132", id);
-      const res = await this.$axios.post("/subject/status", { id });
-      if (res.data.code == 200) {
-        // 提示
-        this.$message({
-          type: "success",
-          message: "更新状态成功~"
-        });
-        // 刷新
-        this.getSubjectListData();
-      }
-    },
+    // async changeStatus(id) {
+    //   // console.log("132", id);
+    //   const res = await this.$axios.post("/subject/status", { id });
+    //   if (res.data.code == 200) {
+    //     // 提示
+    //     this.$message({
+    //       type: "success",
+    //       message: "更新状态成功~"
+    //     });
+    //     // 刷新
+    //     this.getSubjectListData();
+    //   }
+    // },
+    // 注释的以上代码,改为调用混入里的方法
+
     // 删除操作
-    del(id) {
-      this.$confirm("确认要删除?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(async () => {
-          const res = await this.$axios.post("/subject/remove", { id });
-          if (res.data.code == 200) {
-            // 提示
-            this.$message({
-              type: "success",
-              message: "删除成功~"
-            });
-            // 刷新
-            this.getSubjectListData();
-          }
-        })
-        .catch(() => {});
-    },
+    // del(id) {
+    //   this.$confirm("确认要删除?", "提示", {
+    //     confirmButtonText: "确定",
+    //     cancelButtonText: "取消",
+    //     type: "warning"
+    //   })
+    //     .then(async () => {
+    //       const res = await this.$axios.post("/subject/remove", { id });
+    //       if (res.data.code == 200) {
+    //         // 提示
+    //         this.$message({
+    //           type: "success",
+    //           message: "删除成功~"
+    //         });
+    //         // 刷新
+    //         this.getSubjectListData();
+    //       }
+    //     })
+    //     .catch(() => {});
+    // },
+    // 注释的以上代码,改为调用混入里的方法
+
     // 新增学科
     add() {
       this.$refs.SubjectEditRef.dialogVisible = true;
