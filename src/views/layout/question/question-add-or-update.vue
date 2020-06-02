@@ -62,6 +62,26 @@
           </el-radio-group>
         </el-form-item>
 
+        <hr class="hrMargin" />
+
+        <el-form-item label="试题标题" class="setMargin" prop="title">
+          <!-- 使用quill富文本编辑器 -->
+          <quill-editor :options="{placeholder:'请输入试题标题'}" v-model="questionForm.title"></quill-editor>
+        </el-form-item>
+
+        <hr class="hrMargin" />
+
+        <el-form-item label="视频解析" class="setMargin" prop></el-form-item>
+
+        <el-form-item label="答案解析" class="setMargin" prop="answer_analyze">
+          <!-- 使用quill富文本编辑器 -->
+          <quill-editor :options="{placeholder:'请输入答案解析'}" v-model="questionForm.answer_analyze"></quill-editor>
+        </el-form-item>
+
+        <el-form-item label="试题备注" prop="remark">
+          <el-input v-model="questionForm.remark" label="试题备注"></el-input>
+        </el-form-item>
+
         <!-- 按钮 -->
         <el-form-item>
           <el-button>取消</el-button>
@@ -76,9 +96,23 @@
 <script>
 // 导入中国地区三级联动
 import { regionData } from "element-china-area-data";
+
+// 导入quill富文本编辑器依赖的样式
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.snow.css";
+import "quill/dist/quill.bubble.css";
+
+// 导入quill富文本编辑器
+import { quillEditor } from "vue-quill-editor";
+
 export default {
   name: "QuestionEdit",
   // 子组件接收
+
+  // 注册quill富文本编辑器
+  components: {
+    quillEditor
+  },
   props: {
     subjectList: Array,
     enterpriseList: Array,
@@ -100,7 +134,10 @@ export default {
         enterprise: "", // 企业
         type: "1", //题型
         difficulty: "2", // 难度
-        city: [] // 城市
+        city: [], // 城市
+        title: "", // 标题
+        answer_analyze: "", // 答案解析
+        remark: "" // 答案备注
       },
 
       // 校验规则
@@ -114,7 +151,12 @@ export default {
         difficulty: [
           { required: true, message: "请选择题型", trigger: "change" }
         ],
-        city: [{ required: true, message: "请选择城市", trigger: "change" }]
+        city: [{ required: true, message: "请选择城市", trigger: "change" }],
+        title: [{ required: true, message: "标题不能为空", trigger: "change" }],
+        answer_analyze: [
+          { required: true, message: "标题不能为空", trigger: "change" }
+        ],
+        remark: [{ required: true, message: "备注不能为空", trigger: "blur" }]
       }
     };
   }
@@ -143,6 +185,18 @@ export default {
   }
   .selectWidth {
     width: 300px;
+  }
+  .hrMargin {
+    margin-bottom: 20px;
+  }
+  .setMargin {
+    .el-form-item__content {
+      margin-left: 0px !important;
+      margin-top: 40px;
+    }
+  }
+  .ql-editor {
+    height: 100px;
   }
 }
 </style>
