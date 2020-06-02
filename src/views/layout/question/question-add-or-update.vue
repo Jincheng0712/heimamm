@@ -69,6 +69,11 @@
           <quill-editor :options="{placeholder:'请输入试题标题'}" v-model="questionForm.title"></quill-editor>
         </el-form-item>
 
+        <!-- 单选/多选/简答的子组件 -->
+        <el-form-item :label="typeObj[questionForm.type]" prop="type">
+          <question-type :questionForm="questionForm"></question-type>
+        </el-form-item>
+
         <hr class="hrMargin" />
 
         <el-form-item label="视频解析" class="setMargin" prop></el-form-item>
@@ -85,7 +90,7 @@
         <!-- 按钮 -->
         <el-form-item>
           <el-button>取消</el-button>
-          <el-button type="primary" @click="submit">确定</el-button>
+          <el-button type="primary">确定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -105,13 +110,17 @@ import "quill/dist/quill.bubble.css";
 // 导入quill富文本编辑器
 import { quillEditor } from "vue-quill-editor";
 
+// 导入题型子组件
+import questionType from "./question-type";
+
 export default {
   name: "QuestionEdit",
   // 子组件接收
 
   // 注册quill富文本编辑器
   components: {
-    quillEditor
+    quillEditor,
+    questionType
   },
   props: {
     subjectList: Array,
@@ -136,8 +145,34 @@ export default {
         difficulty: "2", // 难度
         city: [], // 城市
         title: "", // 标题
+        single_select_answer: "", // 单选答案
+        multiple_select_answer: [], // 多选答案
+        short_answer: "", // 简答答案
         answer_analyze: "", // 答案解析
-        remark: "" // 答案备注
+        remark: "", // 答案备注
+        // 答案选项
+        select_options: [
+          {
+            label: "A",
+            text: "shift",
+            image: ""
+          },
+          {
+            label: "B",
+            text: "pop",
+            image: ""
+          },
+          {
+            label: "C",
+            text: "splice",
+            image: ""
+          },
+          {
+            label: "D",
+            text: "slice",
+            image: ""
+          }
+        ]
       },
 
       // 校验规则
