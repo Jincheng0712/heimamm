@@ -7,6 +7,8 @@
         <el-radio v-model="questionForm.single_select_answer" :label="item.label">{{item.label}}</el-radio>
         <!-- input -->
         <el-input v-model="item.text" label="item.text"></el-input>
+        <!-- 使用文件上传子组件 -->
+        <upload-file style="margin-left:15px;"></upload-file>
       </div>
     </div>
 
@@ -17,6 +19,8 @@
         <el-checkbox :label="item.label" v-model="questionForm.multiple_select_answer"></el-checkbox>
         <!-- input -->
         <el-input style="margin-left:15px;" v-model="item.text"></el-input>
+        <!-- 使用文件上传子组件 -->
+        <upload-file style="margin-left:15px;"></upload-file>
       </div>
     </div>
 
@@ -28,7 +32,12 @@
 </template>
 
 <script>
+// 导入文件上传子组件
+import UploadFile from "./upload-file";
 export default {
+  components: {
+    UploadFile
+  },
   name: "QuestionType",
   props: ["questionForm"]
 };

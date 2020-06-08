@@ -76,7 +76,9 @@
 
         <hr class="hrMargin" />
 
-        <el-form-item label="视频解析" class="setMargin" prop></el-form-item>
+        <el-form-item label="视频解析" class="setMargin" prop>
+          <upload-file type="video" style="margin-left:15px;"></upload-file>
+        </el-form-item>
 
         <el-form-item label="答案解析" class="setMargin" prop="answer_analyze">
           <!-- 使用quill富文本编辑器 -->
@@ -113,6 +115,9 @@ import { quillEditor } from "vue-quill-editor";
 // 导入题型子组件
 import questionType from "./question-type";
 
+// 导入文件上传子组件
+import UploadFile from "./upload-file";
+
 export default {
   name: "QuestionEdit",
   // 子组件接收
@@ -120,7 +125,8 @@ export default {
   // 注册quill富文本编辑器
   components: {
     quillEditor,
-    questionType
+    questionType,
+    UploadFile
   },
   props: {
     subjectList: Array,
