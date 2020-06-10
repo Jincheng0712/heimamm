@@ -66,23 +66,34 @@
 
         <el-form-item label="试题标题" class="setMargin" prop="title">
           <!-- 使用quill富文本编辑器 -->
-          <quill-editor :options="{placeholder:'请输入试题标题'}" v-model="questionForm.title"></quill-editor>
+          <quill-editor
+            :options="{placeholder:'请输入试题标题'}"
+            v-model="questionForm.title"
+            @change="onEditorChange('title')"
+          ></quill-editor>
         </el-form-item>
 
         <!-- 单选/多选/简答的子组件 -->
-        <el-form-item :label="typeObj[questionForm.type]" prop="type">
-          <question-type :questionForm="questionForm"></question-type>
+        <el-form-item
+          :label="typeObj[questionForm.type]"
+          :prop="questionTypeValidateObj[questionForm.type]"
+        >
+          <question-type :questionForm="questionForm" @childchange="valiateQuestionType"></question-type>
         </el-form-item>
 
         <hr class="hrMargin" />
 
         <el-form-item label="视频解析" class="setMargin" prop>
-          <upload-file type="video" style="margin-left:15px;"></upload-file>
+          <upload-file v-model="questionForm.video" type="video" style="margin-left:15px;"></upload-file>
         </el-form-item>
 
         <el-form-item label="答案解析" class="setMargin" prop="answer_analyze">
           <!-- 使用quill富文本编辑器 -->
-          <quill-editor :options="{placeholder:'请输入答案解析'}" v-model="questionForm.answer_analyze"></quill-editor>
+          <quill-editor
+            :options="{placeholder:'请输入答案解析'}"
+            v-model="questionForm.answer_analyze"
+            @change="onEditorChange('answer_analyze')"
+          ></quill-editor>
         </el-form-item>
 
         <el-form-item label="试题备注" prop="remark">
@@ -92,7 +103,7 @@
         <!-- 按钮 -->
         <el-form-item>
           <el-button>取消</el-button>
-          <el-button type="primary">确定</el-button>
+          <el-button type="primary" @click="submit">确定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -141,6 +152,11 @@ export default {
       mode: "", // add 新增 edit 修改
       dialogVisible: false, // 控制dialog的显示及隐藏
       options: regionData, //地区三级联动数据
+      questionTypeValidateObj: {
+        1: "single_select_answer", // 单选
+        2: "multiple_select_answer", // 多选
+        3: "short_answer" // 简答
+      },
 
       // 要传递给服务器的数据模型
       questionForm: {
@@ -156,6 +172,8 @@ export default {
         short_answer: "", // 简答答案
         answer_analyze: "", // 答案解析
         remark: "", // 答案备注
+        video: "", // 上传的视频解析地址
+
         // 答案选项
         select_options: [
           {
@@ -190,16 +208,48 @@ export default {
         ],
         type: [{ required: true, message: "请选择题型", trigger: "change" }],
         difficulty: [
-          { required: true, message: "请选择题型", trigger: "change" }
+          { required: true, message: "请选择难度", trigger: "change" }
         ],
         city: [{ required: true, message: "请选择城市", trigger: "change" }],
         title: [{ required: true, message: "标题不能为空", trigger: "change" }],
         answer_analyze: [
-          { required: true, message: "标题不能为空", trigger: "change" }
+          { required: true, message: "答案解析不能为空", trigger: "change" }
         ],
-        remark: [{ required: true, message: "备注不能为空", trigger: "blur" }]
+        remark: [
+          { required: true, message: "答案备注不能为空", trigger: "blur" }
+        ],
+        single_select_answer: [
+          { required: true, message: "单选答案不能为空", trigger: "blur" }
+        ],
+        multiple_select_answer: [
+          { required: true, message: "多选答案不能为空", trigger: "blur" }
+        ],
+        short_answer: [
+          { required: true, message: "简答答案不能为空", trigger: "change" }
+        ]
       }
     };
+  },
+  methods: {
+    onEditorChange(value) {
+      // 对部分表单字段进行校验
+      this.$refs.questionFormRef.validateField(value);
+    },
+    // 对QuestionType子组件中的 单选、多选、简答进行校验
+    valiateQuestionType() {
+      this.$refs.questionFormRef.validateField([
+        "single_select_answer",
+        "multiple_select_answer",
+        "short_answer"
+      ]);
+    },
+    // 提交
+    submit() {
+      // 提交之前需要校验
+      this.$refs.questionFormRef.validate(async valid => {
+        if (!this.valid) return;
+      });
+    }
   }
 };
 </script>

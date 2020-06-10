@@ -22,6 +22,8 @@ import Welcome from "@/views/layout/welcome"
 
 // 以下是测试路由
 import Parent from '../test/parent.vue' //导入父组件
+import vModel from '../test/v-model' //导入v-model组件
+import vModelParent from '../test/v-model/parent' //导入v-model组件
 
 
 
@@ -53,7 +55,8 @@ let router = new VueRouter({
 
         // 以下是测试路由
         { path: '/parent', component: Parent },
-
+        { path: '/vmodel', component: vModel },
+        { path: '/vmodelparent', component: vModelParent },
 
     ]
 })

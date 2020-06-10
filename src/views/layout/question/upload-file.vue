@@ -14,8 +14,14 @@
       :on-success="handleAvatarSuccess"
       :before-upload="beforeAvatarUpload"
     >
-      <!-- <img v-if="imageUrl" :src="imageUrl" class="avatar" /> -->
-      <i class="el-icon-plus avatar-uploader-icon"></i>
+      <div v-if="type==='video'">
+        <video v-if="value" :src="BASE_URL+'/'+value" controls class="avatar"></video>
+        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+      </div>
+      <div v-else>
+        <img v-if="value" :src="BASE_URL+'/'+value" class="avatar" />
+        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+      </div>
     </el-upload>
   </div>
 </template>
@@ -27,7 +33,8 @@ export default {
     type: {
       type: String, // 这里表示 type 类型是字符串
       default: "image" //默认是image
-    }
+    },
+    value: String
   },
   data() {
     return {
@@ -37,7 +44,10 @@ export default {
   },
   methods: {
     // 上传成功后的回调
-    handleAvatarSuccess(res) {},
+    handleAvatarSuccess(res) {
+      // res.data.url => 需要把路径赋值给父组件中questionForm的video
+      this.$emit("input", res.data.url);
+    },
     // 上传之前的回调
     beforeAvatarUpload(file) {
       if (this.type == "video") {

@@ -4,11 +4,15 @@
     <div v-if="questionForm.type==1">
       <div v-for="item in questionForm.select_options" :key="item.label" class="item">
         <!-- radio -->
-        <el-radio v-model="questionForm.single_select_answer" :label="item.label">{{item.label}}</el-radio>
+        <el-radio
+          v-model="questionForm.single_select_answer"
+          :label="item.label"
+          @change="changevalue"
+        >{{item.label}}</el-radio>
         <!-- input -->
         <el-input v-model="item.text" label="item.text"></el-input>
         <!-- 使用文件上传子组件 -->
-        <upload-file style="margin-left:15px;"></upload-file>
+        <upload-file style="margin-left:15px;" v-model="item.image"></upload-file>
       </div>
     </div>
 
@@ -16,17 +20,27 @@
     <div v-if="questionForm.type==2">
       <div v-for="item in questionForm.select_options" :key="item.label" class="item">
         <!-- checkbox -->
-        <el-checkbox :label="item.label" v-model="questionForm.multiple_select_answer"></el-checkbox>
+        <el-checkbox
+          :label="item.label"
+          v-model="questionForm.multiple_select_answer"
+          @change="changevalue"
+        ></el-checkbox>
         <!-- input -->
         <el-input style="margin-left:15px;" v-model="item.text"></el-input>
         <!-- 使用文件上传子组件 -->
-        <upload-file style="margin-left:15px;"></upload-file>
+        <upload-file style="margin-left:15px;" v-model="item.image"></upload-file>
       </div>
     </div>
 
     <!-- 简答 -->
     <div v-if="questionForm.type==3">
-      <el-input type="textarea" :rows="6" placeholder="请输入内容" v-model="questionForm.short_answer"></el-input>
+      <el-input
+        type="textarea"
+        :rows="6"
+        placeholder="请输入内容"
+        v-model="questionForm.short_answer"
+        @change="changevalue"
+      ></el-input>
     </div>
   </div>
 </template>
@@ -39,7 +53,12 @@ export default {
     UploadFile
   },
   name: "QuestionType",
-  props: ["questionForm"]
+  props: ["questionForm"],
+  methods: {
+    changevalue() {
+      this.$emit("childchange");
+    }
+  }
 };
 </script>
 
