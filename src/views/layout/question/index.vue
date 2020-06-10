@@ -297,7 +297,28 @@ export default {
     },
 
     // 编辑
-    editSubject() {},
+    editSubject(row) {
+      this.$refs.questionEditRef.mode = "edit";
+      this.$refs.questionEditRef.questionForm = JSON.parse(JSON.stringify(row));
+
+      // 把city的值改成可以正常渲染的数组
+      if (row.city) {
+        this.$refs.questionEditRef.questionForm.city = row.city.split(",");
+      } else {
+        this.$refs.questionEditRef.questionForm.city = [];
+      }
+
+      // 把多选的值改成可以正常渲染的数组
+      if (row.multiple_select_answer) {
+        this.$refs.questionEditRef.questionForm.multiple_select_answer = row.multiple_select_answer.split(
+          ","
+        );
+      } else {
+        this.$refs.questionEditRef.questionForm.multiple_select_answer = [];
+      }
+
+      this.$refs.questionEditRef.dialogVisible = true;
+    },
 
     // 更改状态
     async changeStatus(id) {

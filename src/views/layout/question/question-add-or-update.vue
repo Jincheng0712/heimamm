@@ -26,7 +26,7 @@
 
         <el-form-item label="阶段" prop="step">
           <el-select class="selectWidth" v-model="questionForm.step" placeholder="请选择阶段">
-            <el-option v-for="(value,name) in stepObj" :key="name" :label="value" :value="name"></el-option>
+            <el-option v-for="(value,name) in stepObj" :key="name" :label="value" :value="+name"></el-option>
           </el-select>
         </el-form-item>
 
@@ -52,13 +52,13 @@
 
         <el-form-item label="题型" prop="type">
           <el-radio-group v-model="questionForm.type">
-            <el-radio v-for="(value,name) in typeObj" :key="name" :label="name">{{value}}</el-radio>
+            <el-radio v-for="(value,name) in typeObj" :key="name" :label="+name">{{value}}</el-radio>
           </el-radio-group>
         </el-form-item>
 
         <el-form-item label="难度" prop="difficulty">
           <el-radio-group v-model="questionForm.difficulty">
-            <el-radio v-for="(value,name) in difficultyObj" :key="name" :label="name">{{value}}</el-radio>
+            <el-radio v-for="(value,name) in difficultyObj" :key="name" :label="+name">{{value}}</el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -262,6 +262,8 @@ export default {
           res = await this.$axios.post("/question/add", this.questionForm);
         } else {
           // 修改
+          this.questionForm.city = this.questionForm.city.join(",");
+          res = await this.$axios.post("/question/edit", this.questionForm);
         }
         if (res.data.code === 200) {
           // 提示
