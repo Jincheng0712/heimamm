@@ -253,6 +253,46 @@ export default {
 
     add() {
       this.$refs.questionEditRef.mode = "add";
+      this.$refs.questionEditRef.questionForm = {
+        subject: "", //学科
+        step: "", // 阶段
+        enterprise: "", // 企业
+        type: "1", //题型
+        difficulty: "2", // 难度
+        city: [], // 城市
+        title: "", // 标题
+        single_select_answer: "", // 单选答案
+        multiple_select_answer: [], // 多选答案
+        short_answer: "", // 简答答案
+        answer_analyze: "", // 答案解析
+        remark: "", // 答案备注
+        video: "", // 上传的视频解析地址
+
+        // 答案选项
+        select_options: [
+          {
+            label: "A",
+            text: "shift",
+            image: ""
+          },
+          {
+            label: "B",
+            text: "pop",
+            image: ""
+          },
+          {
+            label: "C",
+            text: "splice",
+            image: ""
+          },
+          {
+            label: "D",
+            text: "slice",
+            image: ""
+          }
+        ]
+      };
+
       this.$refs.questionEditRef.dialogVisible = true;
     },
 

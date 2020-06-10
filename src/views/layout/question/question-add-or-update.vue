@@ -147,6 +147,14 @@ export default {
     difficultyObj: Object
   },
 
+  watch: {
+    dialogVisible(newValue) {
+      if (newValue === false) {
+        this.$refs.questionFormRef.clearValidate();
+      }
+    }
+  },
+
   data() {
     return {
       mode: "", // add 新增 edit 修改
@@ -247,7 +255,25 @@ export default {
     submit() {
       // 提交之前需要校验
       this.$refs.questionFormRef.validate(async valid => {
-        if (!this.valid) return;
+        if (!valid) return;
+        let res = null;
+        if (this.mode === "add") {
+          // 新增
+          res = await this.$axios.post("/question/add", this.questionForm);
+        } else {
+          // 修改
+        }
+        if (res.data.code === 200) {
+          // 提示
+          this.$message({
+            type: "success",
+            message: this.mode === "add" ? "新增成功~" : "编辑成功~"
+          });
+          // 关闭
+          this.dialogVisible = false;
+          // 刷新
+          this.$parent.search();
+        }
       });
     }
   }
