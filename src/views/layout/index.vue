@@ -79,31 +79,13 @@ export default {
       if (res.data.code === 200) {
         this.avatar = process.env.VUE_APP_BASEURL + "/" + res.data.data.avatar;
         this.username = res.data.data.username;
+
+        // 保存到仓库中,触发mutations中的方法
+        // 参数一setUserInfo:是仓库里mutations中的方法名
+        // 参数二res.data.data:是要传给仓库保存起来的数据
+        this.$store.commit("setUserInfo", res.data.data);
       }
     },
-
-    // 退出
-    // logout() {
-    //   this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
-    //     confirmButtonText: "确定",
-    //     cancelButtonText: "取消",
-    //     type: "warning"
-    //   })
-    //     .then(async () => {
-    //       const res = await this.$axios.get("/logout");
-    //       if (res.data.code == 200) {
-    //         // 1.删除token
-    //         removeToken();
-    //         // 2.跳转到首页
-    //       }
-    //     })
-    //     .catch(() => {
-    //       this.$message({
-    //         type: "info",
-    //         message: "已取消删除"
-    //       });
-    //     });
-    // }
 
     // 退出
     logout() {
@@ -127,50 +109,7 @@ export default {
 };
 </script>
 
-<style lang="less">
-// .layout {
-//   .header {
-//     display: flex;
-//     align-items: center;
-//     justify-content: space-between;
-//     border-bottom: 1px solid #f3f3f3;
-//     .left {
-//       display: flex;
-//       align-items: center;
-//       .marginlr {
-//         margin-left: 10px;
-//         margin-right: 10px;
-//       }
-//       .title {
-//         font-size: 22px;
-//         color: #49a1ff;
-//         background-color: #fff;
-//       }
-//     }
-//     .right {
-//       display: flex;
-//       align-items: center;
-//       img {
-//         width: 43px;
-//         height: 43px;
-//         margin-right: 9px;
-//         border-radius: 50%;
-//       }
-//       .name {
-//         margin-right: 38px;
-//       }
-//     }
-//   }
 
-//   .el-main {
-//     background-color: #e6e6e5;
-//   }
-
-//   .el-container {
-//     height: 800px;
-//   }
-// }
-</style>
 <style lang="less">
 element.style {
   height: 100%;
