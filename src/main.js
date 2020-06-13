@@ -13,6 +13,9 @@ Vue.config.productionTip = false;
 
 // 导入router文件里index.js的路由router,注意这里不是导包
 import router from "./router/index";
+// 导入仓库
+import store from "@/store";
+
 
 // 导入 element.js
 import './plugins/element.js'
@@ -25,5 +28,7 @@ import '@/utils/request.js'
 new Vue({
   render: h => h(App),
   // 将router挂载到vue实例
-  router
+  router,
+  // 将store挂载到vue实例
+  store
 }).$mount('#app');
