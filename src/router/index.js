@@ -21,9 +21,9 @@ import Welcome from "@/views/layout/welcome"
 
 
 // 以下是测试路由
-import Parent from '../test/parent.vue' //导入父组件
-import vModel from '../test/v-model' //导入v-model组件
-import vModelParent from '../test/v-model/parent' //导入v-model组件
+// import Parent from '../test/parent.vue' //导入父组件
+// import vModel from '../test/v-model' //导入v-model组件
+// import vModelParent from '../test/v-model/parent' //导入v-model组件
 
 
 
@@ -35,28 +35,89 @@ import { getToken } from '@/utils/token'
 
 let router = new VueRouter({
     routes: [
-        { path: '/', component: Login },
-        { path: '/login', component: Login },
+        { path: '/', redirect: '/login' },
+        { path: '/login', component: Login, meta: { title: '登录' } },
 
         // 后台页路由配置
         {
             path: '/layout',
             component: Layout,
+            meta: { roles: ["超级管理员", "管理员", "老师", "学生"] },
             // 嵌套路由
             children: [
-                { path: 'welcome', component: Welcome },
-                { path: 'chart', component: Chart, },
-                { path: 'user', component: User, },
-                { path: 'enterprise', component: Enterprise, },
-                { path: 'question', component: Question, },
-                { path: 'subject', component: Subject, },
+                {
+                    path: 'welcome',
+                    component: Welcome,
+                    // meta是元信息
+                    meta: {
+                        roles: ['超级管理员', '管理员', '老师', '学生'],
+                        icon: 'el-icon-date',
+                        fullPath: '/layout/welcome',
+                        title: '个人信息'
+                    }
+                },
+
+                {
+                    path: 'chart',
+                    component: Chart,
+                    meta: {
+                        roles: ['超级管理员', '管理员', '老师'],
+                        icon: 'el-icon-pie-chart',
+                        fullPath: '/layout/chart',
+                        title: '数据预览'
+                    }
+                },
+
+                {
+                    path: 'enterprise',
+                    component: Enterprise,
+                    meta: {
+                        roles: ['超级管理员', '管理员', '老师',],
+                        icon: 'el-icon-office-building',
+                        fullPath: '/layout/enterprise',
+                        title: '企业列表'
+                    }
+                },
+
+                {
+                    path: 'user',
+                    component: User,
+                    meta: {
+                        roles: ['超级管理员', '管理员', '老师',],
+                        icon: 'el-icon-user',
+                        fullPath: '/layout/user',
+                        title: '用户列表'
+                    }
+                },
+
+                {
+                    path: 'question',
+                    component: Question,
+                    meta: {
+                        roles: ['超级管理员', '管理员', '老师', '学生'],
+                        icon: 'el-icon-edit-outline',
+                        fullPath: '/layout/question',
+                        title: '题库列表'
+                    }
+                },
+
+                {
+                    path: 'subject',
+                    component: Subject,
+                    meta: {
+                        roles: ['超级管理员', '管理员', '老师'],
+                        icon: 'el-icon-notebook-2',
+                        fullPath: '/layout/subject',
+                        title: '学科列表'
+                    }
+                },
             ]
         },
 
         // 以下是测试路由
-        { path: '/parent', component: Parent },
-        { path: '/vmodel', component: vModel },
-        { path: '/vmodelparent', component: vModelParent },
+        // { path: '/parent', component: Parent },
+        // { path: '/vmodel', component: vModel },
+        // { path: '/vmodelparent', component: vModelParent },
 
     ]
 })

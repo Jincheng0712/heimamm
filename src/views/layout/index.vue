@@ -16,6 +16,7 @@
       <!--左边菜单  -->
       <el-aside width="auto">
         <el-menu :router="true" :collapse="isCollapse" :default-active="defaultActive">
+          <!--          
           <el-menu-item index="/layout/welcome">
             <i class="el-icon-date"></i>
             <span slot="title">个人信息</span>
@@ -39,6 +40,15 @@
           <el-menu-item index="/layout/subject">
             <i class="el-icon-notebook-2"></i>
             <span slot="title">学科列表</span>
+          </el-menu-item>
+          -->
+          <el-menu-item
+            v-for="item in $router.options.routes[2].children"
+            :key="item.path"
+            :index="item.meta.fullPath"
+          >
+            <i :class="item.meta.icon"></i>
+            <span slot="title">{{item.meta.title}}</span>
           </el-menu-item>
         </el-menu>
       </el-aside>
@@ -66,6 +76,7 @@ export default {
   created() {
     this.defaultActive = this.$route.fullPath;
     this.getUserInfoData();
+    console.log(this.$router);
   },
   methods: {
     async getUserInfoData() {
