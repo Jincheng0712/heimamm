@@ -8,16 +8,25 @@ import Vue from 'vue';
 // 导入vue-router
 import VueRouter from 'vue-router';
 
-// 导入子组件
-import Login from '@/views/login'
-import Layout from '@/views/layout'
+// 导入子组件 (普通导入方式)
+// import Login from '@/views/login'
+// import Layout from '@/views/layout'
+// import Chart from '@/views/layout/chart'
+// import User from '@/views/layout/user'
+// import Enterprise from '@/views/layout/enterprise'
+// import Question from '@/views/layout/question'
+// import Subject from '@/views/layout/subject'
+// import Welcome from "@/views/layout/welcome"
 
-import Chart from '@/views/layout/chart'
-import User from '@/views/layout/user'
-import Enterprise from '@/views/layout/enterprise'
-import Question from '@/views/layout/question'
-import Subject from '@/views/layout/subject'
-import Welcome from "@/views/layout/welcome"
+// 导入子组件 (路由懒加载导入方式)
+const Login = () => import('@/views/login')
+const Layout = () => import('@/views/layout')
+const Chart = () => import('@/views/layout/chart')
+const User = () => import('@/views/layout/user')
+const Enterprise = () => import('@/views/layout/enterprise')
+const Question = () => import('@/views/layout/question')
+const Subject = () => import('@/views/layout/subject')
+const Welcome = () => import('@/views/layout/welcome')
 
 
 // 以下是测试路由
@@ -122,7 +131,7 @@ let router = new VueRouter({
     ]
 })
 
-// 全局路径导航卫士 (请求拦截器)
+// 全局前置路径导航卫士 (请求拦截器)
 router.beforeEach((to, from, next) => {
     // console.log('到哪里去', to);
     // console.log('从哪里来', from);
@@ -137,7 +146,12 @@ router.beforeEach((to, from, next) => {
             next('/login');
         }
     }
-})
+});
+
+// 全局后置钩子(设置网页标题)
+router.afterEach((to, from) => {
+    document.title = to.meta.title || '黑马面面';
+});
 
 // 输出router
 export default router;

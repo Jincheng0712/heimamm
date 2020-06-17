@@ -15,7 +15,12 @@
     <el-container>
       <!--左边菜单  -->
       <el-aside width="auto">
-        <el-menu :router="true" :collapse="isCollapse" :default-active="defaultActive">
+        <el-menu
+          :router="true"
+          :collapse="isCollapse"
+          :default-active="defaultActive"
+          class="el-menu-vertical-demo"
+        >
           <!--          
           <el-menu-item index="/layout/welcome">
             <i class="el-icon-date"></i>
@@ -46,6 +51,7 @@
             v-for="item in $router.options.routes[2].children"
             :key="item.path"
             :index="item.meta.fullPath"
+            v-show="item.meta.roles.includes($store.getters.getUserInfo.role)"
           >
             <i :class="item.meta.icon"></i>
             <span slot="title">{{item.meta.title}}</span>
@@ -76,8 +82,11 @@ export default {
   created() {
     this.defaultActive = this.$route.fullPath;
     this.getUserInfoData();
-    console.log(this.$router);
+    // console.log(this.$router);
+    // $store.getters.getUserInfo.role
+    // console.log(this.$store.getters.getUserInfo);
   },
+
   methods: {
     async getUserInfoData() {
       const res = await this.$axios.get("/info", {

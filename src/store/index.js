@@ -14,7 +14,13 @@ const store = new Vuex.Store({
     // state是状态,也就是存放数据的地方
     state: {
         // 定义将来仓库中要操作的数据
-        userInfo: null
+        userInfo: {}
+    },
+    // 所有获取仓库数据的方法都写在getters里面
+    getters: {
+        getUserInfo(state, ) {
+            return state.userInfo;
+        }
     },
     // 所有操作仓库数据的方法都写在mutations里面
     mutations: {
@@ -23,12 +29,7 @@ const store = new Vuex.Store({
             state.userInfo = userInfo;
         }
     },
-    // 所有获取仓库数据的方法都写在getters里面
-    getters: {
-        getUserInfo(state) {
-            return state.userInfo;
-        }
-    },
+
 });
 
 // 4.导出
